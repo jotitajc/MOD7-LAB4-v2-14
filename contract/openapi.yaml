@@ -46,6 +46,42 @@ paths:
             responseTemplates:
               application/json: |
                 {"origen":"MOCK","clienteId":"$util.escapeJavaScript($input.params('cliente-id'))","cuentas":[{"numeroCuenta":"1000000001","tipo":"AHORROS","moneda":"PEN","titular":"Cliente de prueba","saldo":100.0}]}
+    post:
+      tags: [Cuentas]
+      summary: Registrar cuentas de un cliente
+      operationId: RegistrarCuentasCliente
+      parameters:
+        - name: cliente-id
+          in: path
+          required: true
+          description: Identificador público ficticio de cliente
+          schema:
+            type: string
+            pattern: '^CLI[0-9]{3}$'
+      responses:
+        '200':
+          description: Cuentas del cliente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsultaCuentas'
+        '404':
+          description: Cliente no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problema'
+      x-amazon-apigateway-integration:
+        type: mock
+        requestTemplates:
+          application/json: '{"statusCode": 200}'
+        passthroughBehavior: never
+        responses:
+          default:
+            statusCode: '200'
+            responseTemplates:
+              application/json: |
+                {"origen":"MOCK","clienteId":"$util.escapeJavaScript($input.params('cliente-id'))","cuentas":[{"numeroCuenta":"1000000001","tipo":"AHORROS","moneda":"PEN","titular":"Cliente de prueba","saldo":100.0}]}
 components:
   schemas:
     Cuenta:
